@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func main() {
 	// var a = (rand.Intn(6) + 1)
 	// switch a {
@@ -22,12 +20,12 @@ func main() {
 	// 	fmt.Println("it is nothing")
 	// }
 
-	flist := []int{1, 2, 3, 4, 5}
+	// flist := []int{1, 2, 3, 4, 5}
 	// for i, val := range flist {
 	// 	fmt.Printf("index is %v and value is %v\n", i, val)
 	// }
-	for val := 0; val < len(flist); val++ {
-		fmt.Printf("The value is %v\n", val)
-	}
+	// for val := 0; val < len(flist); val++ {
+	// 	fmt.Printf("The value is %v\n", val)
+	// }
 
 }

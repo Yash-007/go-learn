@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 func main() {
@@ -15,9 +13,10 @@ func main() {
 	fmt.Printf("a is of type %T \n", a)
 
 	fmt.Println("Enter the rating for the pizza: ")
-	reader := bufio.NewReader(os.Stdin)
+	// reader := bufio.NewReader(os.Stdin)
 
-	input, _ := reader.ReadString('\n')
+	// input, _ := reader.ReadString('\n')
+	input := "343"
 
 	fmt.Println("Thanks for rating: ", input)
 	fmt.Printf("Type: %T", input)

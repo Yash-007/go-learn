@@ -48,9 +48,9 @@ func DecodeJSON() {
 		json.Unmarshal(jsonFromWeb, &courseJson)
 		fmt.Printf("%#v\n\n", courseJson)
 
-		for key, val := range courseJson {
-			fmt.Printf("key is %v and value is %v and type is %T\n", key, val, val)
-		}
+		// for key, val := range courseJson {
+		// 	fmt.Printf("key is %v and value is %v and type is %T\n", key, val, val)
+		// }
 	} else {
 		panic("The data in not the valid json")
 	}
