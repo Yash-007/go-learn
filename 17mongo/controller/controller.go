@@ -2,8 +2,10 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"net/url"
 
 	"github.com/abc/mongo/model"
@@ -89,4 +91,38 @@ func deleteAllMovies() int64 {
 
 	fmt.Println("Number of movies deleted: ", deleteResult.DeletedCount)
 	return deleteResult.DeletedCount
+}
+
+// get all movies from database
+
+func getAllMovies() []bson.M {
+	// cur -> cursor
+	cur, err := collection.Find(context.Background(), bson.D{{}})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var movies []bson.M
+	for cur.Next(context.Background()) {
+		var movie bson.M
+		err := cur.Decode(&movie)
+		if err != nil {
+			log.Fatal(err)
+		}
+		movies = append(movies, movie)
+	}
+	defer cur.Close(context.Background())
+	return movies
+}
+
+// actual controllers
+
+func GetAllMovies(w http.ResponseWriter, r http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	allMovies := getAllMovies()
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "movies fetched successfully",
+		"data":    allMovies,
+	})
 }
