@@ -9,13 +9,14 @@ import (
 	"net/url"
 
 	"github.com/abc/mongo/model"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 const username = "agarwalshivam834"
-const passowrd = "Ya@300803"
+const passowrd = "ya@300803"
 
 var connectionString = "mongodb+srv://" + url.QueryEscape(username) + ":" + url.QueryEscape(passowrd) + "@cluster0.rqsus3e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -45,6 +46,7 @@ func insertOneMovie(movie model.Netflix) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println("Inserted 1 movie in db with id: ", inserted.InsertedID)
 }
 
@@ -118,11 +120,58 @@ func getAllMovies() []bson.M {
 
 // actual controllers
 
-func GetAllMovies(w http.ResponseWriter, r http.Request) {
+func GetAllMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
 	allMovies := getAllMovies()
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"message": "movies fetched successfully",
 		"data":    allMovies,
+	})
+}
+
+func CreateMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+
+	var movie model.Netflix
+	_ = json.NewDecoder(r.Body).Decode(&movie)
+
+	insertOneMovie(movie)
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "movie created successfully",
+		"movie":   movie,
+	})
+}
+
+func MarkAsWatched(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+
+	params := mux.Vars(r)
+
+	updateOneMovie(params["id"])
+}
+
+func DeleteAMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+
+	params := mux.Vars(r)
+	deleteOneMovie(params["id"])
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Movie deleted successfully",
+	})
+}
+
+func DeleteAllMovies(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/x-www-form-urlencode")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+
+	cnt := deleteAllMovies()
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": fmt.Sprintf("All Movies deleted successfully with count %v", cnt),
 	})
 }
